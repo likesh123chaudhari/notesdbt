@@ -1,0 +1,200 @@
+1.	Count total number of students.
+
+ANS  SELECT COUNT(*) TOTAL FROM student;
++-------+
+| TOTAL |
++-------+
+|    28 |
++-------+
+
+2.	Count total number of students who are born in 1986.
+ANS.   1) SELECT NAMEFIRST , DOB FROM STUDENT WHERE YEAR(DOB)=1986;
++-----------+------------+
+| NAMEFIRST | DOB        |
++-----------+------------+
+| sharmin   | 1986-12-14 |
+| deep      | 1986-11-30 |
++-----------+------------+
+2 rows in set (0.00 sec)
+
+2) SELECT COUNT(*) AS TOTAL  FROM STUDENT WHERE YEAR(DOB)=1986;
++-------+
+| TOTAL |
++-------+
+|     2 |
++-------+
+1 row in set (0.00 sec)
+
+
+
+
+3.	Count total number of students whose namefirst starts with the letter ‘B’.
+ANS.    
+SELECT COUNT(*) FROM STUDENT WHERE NAMEFIRST LIKE'B%';
++----------+
+| COUNT(*) |
++----------+
+|        3 |
++----------+
+1 row in set (0.00 sec)
+
+
+4.	Count total number student who were born in ‘July.
+ANS.   
+SELECT COUNT(*) FROM STUDENT WHERE MONTHNAME(DOB)='JULY';
++----------+
+| COUNT(*) |
++----------+
+|        6 |
++----------+
+1 row in set (0.00 sec)
+
+
+5.	Display studentID and count the student who is having more than two phones.
+ANS.    SELECT STUDENTID ,COUNT(NUMBER) AS CNO  FROM STUDENT_PHONE GROUP BY STUDENTID HAVING CNO>2;
++-----------+-----+
+| STUDENTID | CNO |
++-----------+-----+
+|         6 |   3 |
+|        13 |   4 |
++-----------+-----+
+2 rows in set (0.02 sec)
+
+
+
+6.	Count unique universities from student_qualifications table.
+ANS.     SELECT  COUNT(DISTINCT(UNIVERSITY)) FROM STUDENT_QUALIFICATIONS;
++-----------------------------+
+| COUNT(DISTINCT(UNIVERSITY)) |
++-----------------------------+
+|                          11 |
++-----------------------------+
+1 row in set (0.00 sec)
+
+
+7.	Display the university name and the count of those students who have done ‘BE’
+ANS.     SELECT UNIVERSITY, COUNT(*) FROM STUDENT_QUALIFICATIONS WHERE NAME='BE' GROUP BY UNIVERSITY;
++-------------------------+----------+
+| UNIVERSITY              | COUNT(*) |
++-------------------------+----------+
+| Harvard University      |        9 |
+| University of Florida   |        3 |
+| University of Chicago   |        1 |
+| Columbia University     |        2 |
+| Yale University         |        1 |
+| Pennsylvania University |        2 |
+| University of Michigan  |        1 |
+| University of Ohio      |        1 |
++-------------------------+----------+
+8 rows in set (0.00 sec)
+
+
+
+8.	Count how many students has done ‘BE’.
+ANS.   SELECT COUNT(*) FROM STUDENT_QUALIFICATIONS WHERE NAME='BE';
++----------+
+| COUNT(*) |
++----------+
+|       20 |
++----------+
+1 row in set (0.00 sec)
+
+
+
+
+
+9.	Count how many students has not done ‘BE’.
+ANS.    SELECT COUNT(*) FROM STUDENT_QUALIFICATIONS WHERE NAME !='BE';
++----------+
+| COUNT(*) |
++----------+
+|       65 |
++----------+
+1 row in set (0.00 sec)
+
+
+10.	Find the maximum marks student got in ‘BE’.
+ANS.     SELECT MAX(MARKS) FROM STUDENT_QUALIFICATIONS WHERE NAME='BE';
++------------+
+| MAX(MARKS) |
++------------+
+| 97         |
++------------+
+1 row in set (0.00 sec)
+
+
+11.	Find the minimum marks student got in ‘BE’.
+ANS.    SELECT MIN(MARKS) FROM STUDENT_QUALIFICATIONS WHERE NAME='BE';
++------------+
+| MIN(MARKS) |
++------------+
+| 57         |
++------------+
+1 row in set (0.00 sec)
+
+
+12.	Count how many course_batches have started on ’2016-02-01’.
+ANS.     SELECT* FROM COURSE_BATCHES WHERE STARTON='2016-02-01';
++----+--------+----------+------------+------------+----------+
+| ID | name   | courseID | starton    | endson     | capacity |
++----+--------+----------+------------+------------+----------+
+|  1 | Batch1 |        1 | 2016-02-01 | 2016-08-31 |       80 |
+|  2 | Batch2 |        2 | 2016-02-01 | 2016-08-31 |       30 |
+|  3 | Batch3 |        3 | 2016-02-01 | 2016-03-31 |       35 |
++----+--------+----------+------------+------------+----------+
+3 rows in set (0.00 sec)
+
+
+
+
+13.	Count the number of students who have more than 60% in ‘BE’.
+ANS.    SELECT COUNT(*) FROM STUDENT_QUALIFICATIONS WHERE MARKS>60 AND NAME='BE';
++----------+
+| COUNT(*) |
++----------+
+|       19 |
++----------+
+1 row in set (0.00 sec)
+
+
+
+
+14.	Count the number of students who have more than 60% in ‘BE’ and done from ‘Harvard university’.
+ANS.     SELECT COUNT(*) FROM STUDENT_QUALIFICATIONS WHERE MARKS>60 AND NAME='BE' AND UNIVERSITY="Harvard University";
++----------+
+| COUNT(*) |
++----------+
+|        9 |
++----------+
+1 row in set (0.00 sec)
+
+
+
+15.	Count number of courses.
+ANS. SELECT COUNT(*) FROM MODULES;
++----------+
+| COUNT(*) |
++----------+
+|       17 |
++----------+
+1 row in set (0.00 sec)
+
+
+16.	Count how many distinct universities from student_qualifications table.
+ANS.    SELECT COUNT(DISTINCT(UNIVERSITY)) FROM STUDENT_QUALIFICATIONS;
++-----------------------------+
+| COUNT(DISTINCT(UNIVERSITY)) |
++-----------------------------+
+|                          11 |
++-----------------------------+
+1 row in set (0.00 sec) 
+
+
+17.	Find the maximum marks any student has got in “BE”.
+ANS.    SELECT MAX(MARKS) FROM STUDENT_QUALIFICATIONS WHERE NAME='BE';
++------------+
+| MAX(MARKS) |
++------------+
+| 97         |
++------------+
+1 row in set (0.00 sec)

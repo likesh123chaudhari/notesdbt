@@ -1,0 +1,336 @@
+Q.1 : Write a query to display the number of people with same job.
+
+SOLUTION :
+
+mysql> SELECT JOB AS "SAME_JOB", COUNT(JOB) AS "NO_OF_PEOPLE" FROM EMP GROUP BY JOB;
++---------------------+--------------+
+| SAME_JOB            | NO_OF_PEOPLE |
++---------------------+--------------+
+| Compliance officers |            3 |
+| Public Relation     |            2 |
+| CLERK               |            7 |
+| SALESMAN            |            6 |
+| MANAGER             |            5 |
+| ANALYST             |            3 |
+| PRESIDENT           |            1 |
+| vice PRESIDENT      |            1 |
++---------------------+--------------+
+8 rows in set (0.00 sec)
+ 
+--------------------------------------------------------------------------------------------------------------------------
+
+Q.2 : Determine the number of managers without listing them.
+
+SOLUTION :
+ 
+mysql> SELECT COUNT(JOB) FROM EMP WHERE JOB IN (SELECT JOB FROM EMP WHERE JOB='MANAGER');
++------------+
+| COUNT(JOB) |
++------------+
+|          5 |
++------------+
+1 row in set (0.00 sec)
+ 
+--------------------------------------------------------------------------------------------------------------------------
+
+Q.3 : Write a query that will display the difference between the highest and lowest salaries
+
+SOLUTION :
+ 
+mysql> SELECT HIGHEST-LOWEST AS "Difference" FROM (SELECT MAX(SAL) AS "HIGHEST", MIN(SAL) AS "LOWEST" FROM EMP) AS VALUE;
++------------+
+| Difference |
++------------+
+|       4200 |
++------------+
+1 row in set (0.00 sec)
+ 
+--------------------------------------------------------------------------------------------------------------------------
+
+Q.4 : Display the manager number and salary of the lowest paid employee for that manager. 
+
+SOLUTION :
+ 
+mysql> SELECT * FROM (SELECT MGR, MIN(SAL) FROM EMP WHERE MGR IS NOT NULL GROUP BY MGR) AS TB;
++------+----------+
+| MGR  | MIN(SAL) |
++------+----------+
+| 7566 |     3000 |
+| 7698 |      950 |
+| 7782 |     1300 |
+| 7788 |     1100 |
+| 7839 |     2450 |
+| 7902 |      800 |
+| 7919 |     2575 |
+| 7920 |     1750 |
++------+----------+
+8 rows in set (0.00 sec)
+ 
+--------------------------------------------------------------------------------------------------------------------------
+
+Q.5 : Write a query to display the department number, location, number of employees and the average salary for all employees in that department.
+
+SOLUTION :
+ 
+mysql> SELECT E.DEPTNO, COUNT(E.ENAME) AS "NO_OF_EMPLOYEES", AVG(E.SAL) AS AVERAGE, D.LOC AS LOCATION FROM EMP E JOIN DEPT D ON E.DEPTNO=D.DEPTNO GROUP BY E.DEPTNO ;
++--------+-----------------+-----------+----------+
+| DEPTNO | NO_OF_EMPLOYEES | AVERAGE   | LOCATION |
++--------+-----------------+-----------+----------+
+|     30 |              12 | 1852.0833 | CHICAGO  |
+|     50 |               3 | 1750.0000 | PUNE     |
+|     20 |               8 | 2421.8750 | DALLAS   |
+|     10 |               5 | 2770.0000 | NEW YORK |
++--------+-----------------+-----------+----------+
+4 rows in set (0.00 sec)
+ 
+--------------------------------------------------------------------------------------------------------------------------
+
+Q.6 : Find out the department name in which the maximum number of employees works.
+
+SOLUTION :
+ 
+mysql> SELECT DEPARTMENT, MAX(NO_OF_EMPLOYEES)AS "DEPT_WITH_HIGH_EMP" FROM (SELECT E.DEPTNO, D.DNAME "DEPARTMENT", COUNT(E.ENAME) AS "NO_OF_EMPLOYEES" FROM EMP E JOIN DEPT D ON E.DEPTNO=D.DEPTNO GROUP BY E.DEPTNO) AS TB GROUP BY TB.DEPTNO LIMIT 1;
++------------+--------------------+
+| DEPARTMENT | DEPT_WITH_HIGH_EMP |
++------------+--------------------+
+| SALES      |                 12 |
++------------+--------------------+
+1 row in set (0.00 sec)
+ 
+--------------------------------------------------------------------------------------------------------------------------
+
+Q.7 : Find out department in which no employees are working.
+
+SOLUTION :
+ 
+mysql> SELECT D.DEPTNO, D.DNAME, D.LOC FROM DEPT D LEFT JOIN emp E ON D.DEPTNO = E.DEPTNO WHERE E.DEPTNO IS NULL;
++--------+------------+--------+
+| DEPTNO | DNAME      | LOC    |
++--------+------------+--------+
+|     40 | OPERATIONS | BOSTON |
++--------+------------+--------+
+1 row in set (0.00 sec)
+
+--------------------------------------------------------------------------------------------------------------------------
+
+Q.8 : Write a query to find the employees who earn the lowest salary in each department. Display the result in the ascending order of salary.
+
+SOLUTION :
+ 
+mysql> SELECT E.EMPNO, E.ENAME, E.DEPTNO, E.SAL FROM EMP E WHERE E.SAL=(SELECT MIN(SAL) FROM EMP WHERE DEPTNO=E.DEPTNO) ORDER BY E.SAL ASC;
++-------+----------+--------+------+
+| EMPNO | ENAME    | DEPTNO | SAL  |
++-------+----------+--------+------+
+|  7369 | SMITH    |     20 |  800 |
+|  7900 | JAMES    |     30 |  950 |
+|  7934 | MILLER   |     10 | 1300 |
+|  6129 | VRUSHALI |     50 | 1750 |
+|  9400 | SANGITA  |     50 | 1750 |
+|  9473 | SUPRIYA  |     50 | 1750 |
++-------+----------+--------+------+
+6 rows in set (0.00 sec)
+
+--------------------------------------------------------------------------------------------------------------------------
+
+Q.9 : Display only the name of the salesman who achieved the maximum total sales among all the salesman.
+
+SOLUTION :
+ 
+mysql> SELECT S.SNAME FROM SALESPEOPLE S JOIN (SELECT SNUM, COUNT(SNUM) AS ORDERS FROM CUSTOMERS GROUP BY SNUM) ORDERCOUNT ON S.SNUM=ORDERCOUNT.SNUM ORDER BY ORDERCOUNT.ORDERS DESC LIMIT 1;
++-------+
+| SNAME |
++-------+
+| James |
++-------+
+1 row in set (0.00 sec)
+
+--------------------------------------------------------------------------------------------------------------------------
+
+Q.10 : Write a query to display the two lowest earner’s names and salaries.
+
+Solution :
+
+mysql> SELECT ENAME, DEPTNO, SAL FROM EMP ORDER BY SAL ASC LIMIT 2;
++-------+--------+------+
+| ENAME | DEPTNO | SAL  |
++-------+--------+------+
+| SMITH |     20 |  800 |
+| JAMES |     30 |  950 |
++-------+--------+------+
+2 rows in set (0.00 sec)
+
+--------------------------------------------------------------------------------------------------------------------------
+
+Q.11 : List the employee details if and only if more than 10 employees are present in department no 10.
+
+Solution :
+
+mysql> SELECT E.EMPNO, E.ENAME, E.DEPTNO FROM EMP E JOIN (SELECT  DEPTNO, COUNT(ENAME) FROM EMP GROUP BY DEPTNO HAVING COUNT(ENAME)>10) SALT ON E.DEPTNO=SALT.DEPTNO;
++-------+---------+--------+
+| EMPNO | ENAME   | DEPTNO |
++-------+---------+--------+
+|  6001 | GITA    |     30 |
+|  7499 | ALLEN   |     30 |
+|  7521 | WARD    |     30 |
+|  7654 | MARTIN  |     30 |
+|  7698 | BLAKE   |     30 |
+|  7844 | TURNER  |     30 |
+|  7900 | JAMES   |     30 |
+|  7919 | HOFFMAN |     30 |
+|  7920 | GRASS   |     30 |
+|  7945 | AARUSH  |     30 |
+|  7949 | ALEX    |     30 |
+|  8433 | NATASHA |     30 |
++-------+---------+--------+
+12 rows in set (0.00 sec)
+ 
+--------------------------------------------------------------------------------------------------------------------------
+
+Q.12 : List the employee details whose salary is greater than the lowest salary of an employee belonging to deptno 20.
+
+Solution :
+ 
+mysql> SELECT MIN(SAL) FROM EMP WHERE DEPTNO=20;
++----------+
+| MIN(SAL) |
++----------+
+|      800 |
++----------+
+1 row in set (0.00 sec)
+
+mysql> SELECT ENAME, SAL FROM EMP WHERE SAL>(SELECT MIN(SAL) FROM EMP WHERE DEPTNO=20);
++----------+------+
+| ENAME    | SAL  |
++----------+------+
+| GITA     | 1750 |
+| VRUSHALI | 1750 |
+| SHARMIN  | 1750 |
+| BANDISH  | 1750 |
+| AARAV    | 3350 |
+| THOMAS   | 1750 |
+| ALLEN    | 1600 |
+| WARD     | 1250 |
+| JONES    | 2975 |
+| MARTIN   | 1250 |
+| BLAKE    | 2850 |
+| CLARK    | 2450 |
+| SCOTT    | 3000 |
+| KING     | 5000 |
+| FRED     | 5000 |
+| TURNER   | 1500 |
+| ADAMS    | 1100 |
+| JAMES    |  950 |
+| FORD     | 3000 |
+| HOFFMAN  | 4150 |
+| GRASS    | 2575 |
+| MILLER   | 1300 |
+| AARUSH   | 1350 |
+| ALEX     | 1250 |
+| NATASHA  | 1750 |
+| SANGITA  | 1750 |
+| SUPRIYA  | 1750 |
++----------+------+
+27 rows in set (0.00 sec)
+ 
+--------------------------------------------------------------------------------------------------------------------------
+
+Q.13 : List the details of the employee earning more than the highest paid manager.
+
+Solution :
+ 
+mysql> SELECT ENAME, JOB, SAL FROM EMP WHERE SAL>(SELECT MAX(SAL) FROM EMP WHERE JOB='MANAGER');
++-------+----------------+------+
+| ENAME | JOB            | SAL  |
++-------+----------------+------+
+| KING  | PRESIDENT      | 5000 |
+| FRED  | vice PRESIDENT | 5000 |
++-------+----------------+------+
+2 rows in set (0.00 sec)
+
+--------------------------------------------------------------------------------------------------------------------------
+
+Q.14 : Which department has the highest annual remuneration bill?
+
+Solution :
+ 
+mysql> SELECT DEPTNO, MAX(SAL*12) FROM EMP GROUP BY DEPTNO;
++--------+-------------+
+| DEPTNO | MAX(SAL*12) |
++--------+-------------+
+|     10 |       60000 |
+|     20 |       60000 |
+|     30 |       49800 |
+|     50 |       21000 |
++--------+-------------+
+4 rows in set (0.00 sec)
+
+--------------------------------------------------------------------------------------------------------------------------
+
+Q.15 : Which is the department having greater than or equal to 3 employees and display the department names in ascending order?
+
+Solution :
+
+mysql> SELECT D.DEPTNO, D.DNAME FROM DEPT D JOIN (SELECT  DEPTNO, COUNT(ENAME) COUNTS FROM EMP GROUP BY DEPTNO) EPY ON D.DEPTNO=EPY.DEPTNO WHERE EPY.COUNTS>=3 ORDER BY EPY.COUNTS ASC;
++--------+------------+
+| DEPTNO | DNAME      |
++--------+------------+
+|     50 | HR         |
+|     10 | ACCOUNTING |
+|     20 | RESEARCH   |
+|     30 | SALES      |
++--------+------------+
+4 rows in set (0.00 sec)
+
+--------------------------------------------------------------------------------------------------------------------------
+
+Q.16 : List out the employees who earn more than every employee in department 30.
+
+Solution :
+
+mysql> SELECT ENAME, SAL, DEPTNO FROM EMP WHERE SAL>(SELECT MAX(sAL) FROM EMP WHERE DEPTNO=30);
++-------+------+--------+
+| ENAME | SAL  | DEPTNO |
++-------+------+--------+
+| KING  | 5000 |     10 |
+| FRED  | 5000 |     20 |
++-------+------+--------+
+2 rows in set (0.00 sec)
+
+--------------------------------------------------------------------------------------------------------------------------
+
+Q.17 : List out the employees who earn more than the lowest salary in department 30.
+
+Solution :
+
+mysql> SELECT ENAME, SAL, DEPTNO FROM EMP WHERE SAL>(SELECT MIN(sAL) FROM EMP WHERE DEPTNO=30);
++----------+------+--------+
+| ENAME    | SAL  | DEPTNO |
++----------+------+--------+
+| GITA     | 1750 |     30 |
+| VRUSHALI | 1750 |     50 |
+| SHARMIN  | 1750 |     20 |
+| BANDISH  | 1750 |     20 |
+| AARAV    | 3350 |     10 |
+| THOMAS   | 1750 |     10 |
+| ALLEN    | 1600 |     30 |
+| WARD     | 1250 |     30 |
+| JONES    | 2975 |     20 |
+| MARTIN   | 1250 |     30 |
+| BLAKE    | 2850 |     30 |
+| CLARK    | 2450 |     10 |
+| SCOTT    | 3000 |     20 |
+| KING     | 5000 |     10 |
+| FRED     | 5000 |     20 |
+| TURNER   | 1500 |     30 |
+| ADAMS    | 1100 |     20 |
+| FORD     | 3000 |     20 |
+| HOFFMAN  | 4150 |     30 |
+| GRASS    | 2575 |     30 |
+| MILLER   | 1300 |     10 |
+| AARUSH   | 1350 |     30 |
+| ALEX     | 1250 |     30 |
+| NATASHA  | 1750 |     30 |
+| SANGITA  | 1750 |     50 |
+| SUPRIYA  | 1750 |     50 |
++----------+------+--------+
+26 rows in set (0.00 sec)
